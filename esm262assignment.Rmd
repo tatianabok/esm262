@@ -1,0 +1,16 @@
+---
+title: "Assignment 1"
+author: "Tatiana Bok"
+date: "2023-02-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Why I am taking this course: 
+I am taking this course to better understand R, and the overall process of data management and analysis. Since I know I will encounter coding and programming further throughout my academic and professional career, I want to be well equipped to understand these concepts and processes. I feel that this is a valuable skill to have in the field of environmental science and management, as it helps us better understand various interactions in the environment. Overall, I want to be comfortable and familiar with computing practices. 
+
+### My data science background: 
+During my undergraduate career, I took a data analysis course and used some data science skills in a laboratory setting. In the data analysis course I took, we used R. In this class I learned the basics of R, various statistical analysis approaches, and how to apply them to data. I built upon this new skill as a research assistant in an environmental toxicology lab. There, I mainly focused on data collection as opposed to the science/analysis portion of the work. In this lab, to analyze our data, we used the statistical software "SPSS." After this, I took another data science course here at Bren, which was Intro to Statistics and Data Analysis. In this class I was able to build upon my prior knowledge, but realized that I have a lot more I need to learn.
