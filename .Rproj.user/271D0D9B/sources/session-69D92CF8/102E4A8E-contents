@@ -1,0 +1,129 @@
+---
+title: "Assignment 3"
+author: "Tatiana Bok"
+date: "2023-03-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(purrr)
+library(ggpubr)
+```
+
+# Our highway
+
+4 car types 
+
+Imagine with have 3 different car types - and we know how often each occurs:
+
+* car A  mass 20000 kg, area 22 m^2^
+
+* car B mass 65000 kg, area 30 m^2^
+
+* car C mass 38000 kg area 22 m^2^
+
+* car D mass 5000 kg area area 10m^2^
+
+Mean highway speed is 80 km/hr; standard deviation of 10km/hr
+
+```{r, results= FALSE, fig.show='hide'}
+# possible cars structure
+source("../assignment3/R/compute_auto_power.R")
+possible_cars = data.frame(name = c("A","B","C","D"),mass=c(20000,65000,38000,5000), area = c(22,30,22,10))
+
+speed_base = 100 * 0.28
+
+possible_cars$power = compute_auto_power(V=speed_base, A = possible_cars$area, m=possible_cars$mass)
+
+head(possible_cars)
+
+# show results                         
+ggplot(possible_cars, aes(x=mass, y=power, fill=as.factor(area)))+geom_col()+labs(y="Power W", x="Mass (kg)", fill="Area (m2)")
+```
+
+# Computing Mean and Maximum Power
+### using a FOR loop
+```{r, results= FALSE, fig.show='hide'}
+possible_cars
+
+# speed conversion 
+nsample = 200
+mean_speed = log(80*0.277)
+
+speeds = rlnorm(mean=mean_speed, sd=0.1*mean_speed, nsample)
+summary(speeds)
+
+
+# create a data frame
+powerall1 = as.data.frame(matrix(nrow=length(speeds), ncol=nrow(possible_cars)))
+head(powerall1)
+
+nrow(possible_cars)
+
+for (i in 1:nrow(possible_cars)) {
+  powerall1[,i] = compute_auto_power(A=possible_cars$area[i], m=possible_cars$mass[i], V=speeds)
+}
+
+head(powerall1)
+colnames(powerall1)=possible_cars$name
+
+# columns in to rows
+powerallr1 = powerall1 %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+head(powerallr1)
+
+# plotting
+forloop_carplot = ggplot(powerallr1, aes(car,power, fill=car))+geom_boxplot()+ggtitle("For Loop")
+
+forloop_carplot
+
+```
+
+
+### using pmap
+```{r, results= FALSE, fig.show='hide'}
+possible_cars
+
+# speed conversion
+nsample = 200
+mean_speed = log(80*0.277)
+
+speeds = rlnorm(mean=mean_speed, sd=0.1*mean_speed, nsample)
+summary(speeds)
+
+powerall2 = pmap(list(A = possible_cars$area, m=possible_cars$mass), compute_auto_power, V=speeds)
+
+powerall2 = as.data.frame(powerall2, col.names=possible_cars$name)
+
+# turn columns in to rows
+powerallr2 = powerall2 %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+head(powerallr2)
+
+pmap_plot = ggplot(powerallr2, aes(car,power, fill=car))+geom_boxplot()+ggtitle("pmap")
+
+pmap_plot
+```
+
+
+### Boxplots
+```{r}
+ggarrange(forloop_carplot, pmap_plot)
+```
+
+
+
+### Mean and Maximum
+```{r}
+powerall1 %>% map(mean)
+powerall2 %>% map(mean)
+
+# upper 90% quantile
+powerall1 %>% map(quantile, probs=0.9)
+powerall2 %>% map(quantile, probs=0.9)
+```
+
+
+
+
+
