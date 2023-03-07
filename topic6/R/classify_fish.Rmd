@@ -1,0 +1,31 @@
+---
+title: "Assignment 5"
+author: "Tatiana Bok"
+date: "2023-03-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(purrr)
+```
+
+# Write a function that takes a vector of fish names and always returns three items
+
+the most common fish (which.max)
+the rarest fish (which.min)
+the total number of fish
+
+```{r}
+fish_data <- read.delim(file = ("fish.txt"))
+
+fish_vector = fish_data$x
+```
+
+
+```{r}
+classify_fish(fish_vector)
+```
+
+
