@@ -1,0 +1,82 @@
+---
+title: "topic7"
+author: "Tatiana Bok"
+date: "2023-03-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(testthat)
+library(purrr)
+library(ggpubr)
+library(tidyverse)
+```
+
+# Our beach
+
+3 turtles
+
+Imagine with have 3 different turtles - and we know their properties:
+
+* turtle A  shell length, maturity length, growth rate
+
+* turtle B shell length, maturity length, growth rate
+
+* turtle C shell length, maturity length, growth rate
+
+* turtle D shell length, maturity length, growth rate
+
+```{r}
+# possible turtles structure maybe...
+# possible_turtles = data.frame(name = c("A","B","C"), shell_lengths=c(), area = c(22,30,22,10))
+```
+
+
+```{r}
+# calculate estimated age and growth rate of a sea turtle whose shell length, maturity length, and a growth rate is 25, 10, and 0.5 cm/yr respectively.
+turtle_properties(25, 10, 0.5)
+
+# error checking = cannot be negative age
+turtle_vector <- c(50, 70, 2)
+stopifnot(all(turtle_vector >= 0))
+```
+
+```{r}
+# Create a vector of shell lengths
+shell_lengths <- c(10, 15, 20, 25)
+
+# Create an empty list to store the results
+results <- list()
+```
+
+### Looping
+```{r}
+# Loop over each shell length and call the turtle_properties function
+for (i in seq_along(shell_lengths)) {
+  result <- turtle_properties(shell_length = shell_lengths[i], maturity_length = 5, growth_rate = 0.2)
+  results[[i]] <- result
+}
+# Combine the results into a data frame
+df <- data.frame(shell_lengths = shell_lengths, estimated_age = sapply(results, "[[", "estimated_age"))
+# Create a bar chart of the estimated age for each shell length
+ggplot(df, aes(x = shell_lengths, y = estimated_age)) +
+  geom_bar(stat = "identity", fill= shell_lengths) +
+  labs(x = "Shell Length", y = "Estimated Age")
+```
+
+### pmap
+```{r}
+# Create a 
+shell_lengths <- c(10, 15, 20, 25)
+maturity_lengths <- c(5, 10, 15, 20)
+growth_rates <- c(0.1, 0.3, 0.5, 0.7)
+
+turtles = pmap(list(shell_lengths, maturity_lengths, growth_rates), turtle_properties)
+turtles
+```
+
+
+
+
+
