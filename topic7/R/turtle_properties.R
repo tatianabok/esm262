@@ -19,3 +19,4 @@ turtle_properties <- function(shell_length, maturity_length, growth_rate) {
   # Return a list with estimated age and growth rate
   return(list(estimated_age = estimated_age, growth_rate = growth_rate))
 }
+
